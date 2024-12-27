@@ -10,11 +10,11 @@ public class OpenAIRealtimeAPI {
     private var dataChannel: RTCDataChannel?
     private var audioTrack: RTCAudioTrack?
 
-    private let ephemeralToken: String
+    private let apiKey: String
 
-    public init(modelId: String, ephemeralToken: String) {
+    public init(modelId: String, apiKey: String) {
         self.modelId = modelId
-        self.ephemeralToken = ephemeralToken
+        self.apiKey = apiKey
         setupAudioSession()
     }
 
@@ -88,7 +88,7 @@ public class OpenAIRealtimeAPI {
     private func exchangeSDP(offer: String, completion: @escaping (Error?) -> Void) {
         var request = URLRequest(url: URL(string: "\(baseUrl)?model=\(modelId)")!)
         request.httpMethod = "POST"
-        request.addValue("Bearer \(ephemeralToken)", forHTTPHeaderField: "Authorization")
+        request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.addValue("application/sdp", forHTTPHeaderField: "Content-Type")
         request.httpBody = offer.data(using: .utf8)
 
@@ -136,7 +136,6 @@ extension OpenAIRealtimeAPI: RTCPeerConnectionDelegate {
 
     public func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
         if let audioTrack = stream.audioTracks.first {
-            // Handle incoming audio track
             print("Received remote audio track")
         }
     }
