@@ -141,10 +141,8 @@ extension OpenAIRealtimeAPI: RTCPeerConnectionDelegate {
     // Called when a new media stream is added to the connection
     public func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
         print("New media stream added: \(stream.streamId)")
-        // Handle audio tracks
         for audioTrack in stream.audioTracks {
             print("Audio track found: \(audioTrack.trackId)")
-            // Add custom audio track handling logic here, if needed
         }
     }
 
@@ -156,26 +154,16 @@ extension OpenAIRealtimeAPI: RTCPeerConnectionDelegate {
     // Called when negotiation is needed (e.g., renegotiation of SDP)
     public func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
         print("Negotiation is needed")
-        // Handle renegotiation if required
     }
 
     // Called when the ICE connection state changes
     public func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
         print("ICE connection state changed: \(newState)")
-        switch newState {
-        case .connected:
-            print("ICE connection established")
-        case .disconnected, .failed:
-            print("ICE connection failed or disconnected")
-        default:
-            break
-        }
     }
 
     // Called when a new ICE candidate is generated
     public func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
         print("Generated ICE candidate: \(candidate.sdp)")
-        // Handle sending ICE candidates to the server, if required
     }
 
     // Called when ICE candidates are removed
@@ -187,9 +175,15 @@ extension OpenAIRealtimeAPI: RTCPeerConnectionDelegate {
     public func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
         print("Data channel opened: \(dataChannel.label)")
         self.dataChannel = dataChannel
-        self.dataChannel?.delegate = self // Set the delegate for the data channel
+        self.dataChannel?.delegate = self
+    }
+
+    // Optional Method: Called when the connection's RTC configuration changes
+    public func peerConnection(_ peerConnection: RTCPeerConnection, didChangeConfiguration rtcConfiguration: RTCConfiguration) {
+        print("RTC configuration changed")
     }
 }
+
 
 
 
