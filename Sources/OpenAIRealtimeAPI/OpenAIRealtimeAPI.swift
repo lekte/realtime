@@ -122,7 +122,7 @@ public class OpenAIRealtimeAPI {
         return factory.audioTrack(with: audioSource, trackId: "audio0")
     }
 
-    public func sendEvent(_ event: [String: Any]) {
+    private func sendEvent(_ event: [String: Any]) {
         guard let dataChannel = dataChannel else { return }
         if let jsonData = try? JSONSerialization.data(withJSONObject: event, options: []) {
             let buffer = RTCDataBuffer(data: jsonData, isBinary: false)
