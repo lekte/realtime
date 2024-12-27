@@ -3,7 +3,7 @@ import WebRTC
 import AVFoundation
 
 /// An SDK for interacting with the OpenAI Realtime API
-public class OpenAIRealtimeAPI {
+public class OpenAIRealtimeAPI: NSObject {
     private let baseUrl = "https://api.openai.com/v1/realtime"
     private let modelId: String
     private var peerConnection: RTCPeerConnection?
