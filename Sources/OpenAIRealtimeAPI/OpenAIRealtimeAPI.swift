@@ -133,39 +133,64 @@ public class OpenAIRealtimeAPI: NSObject {
 }
 
 extension OpenAIRealtimeAPI: RTCPeerConnectionDelegate {
+    // Called when the signaling state of the connection changes
     public func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {
-        print("Peer connection signaling state changed: \(stateChanged)")
+        print("Signaling state changed: \(stateChanged)")
     }
 
+    // Called when a new media stream is added to the connection
     public func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
-        print("Peer connection did add stream")
+        print("New media stream added: \(stream.streamId)")
+        // Handle audio tracks
+        for audioTrack in stream.audioTracks {
+            print("Audio track found: \(audioTrack.trackId)")
+            // Add custom audio track handling logic here, if needed
+        }
     }
 
+    // Called when a media stream is removed from the connection
     public func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
-        print("Peer connection did remove stream")
+        print("Media stream removed: \(stream.streamId)")
     }
 
+    // Called when negotiation is needed (e.g., renegotiation of SDP)
     public func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
-        print("Peer connection should negotiate")
+        print("Negotiation is needed")
+        // Handle renegotiation if required
     }
 
+    // Called when the ICE connection state changes
     public func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
-        print("Peer connection ICE connection state changed: \(newState)")
+        print("ICE connection state changed: \(newState)")
+        switch newState {
+        case .connected:
+            print("ICE connection established")
+        case .disconnected, .failed:
+            print("ICE connection failed or disconnected")
+        default:
+            break
+        }
     }
 
+    // Called when a new ICE candidate is generated
     public func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
-        print("Peer connection did generate candidate: \(candidate.sdp)")
+        print("Generated ICE candidate: \(candidate.sdp)")
+        // Handle sending ICE candidates to the server, if required
     }
 
+    // Called when ICE candidates are removed
     public func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
-        print("Peer connection did remove candidates")
+        print("ICE candidates removed")
     }
 
+    // Called when the data channel is opened
     public func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
+        print("Data channel opened: \(dataChannel.label)")
         self.dataChannel = dataChannel
-        print("Peer connection did open data channel")
+        self.dataChannel?.delegate = self // Set the delegate for the data channel
     }
 }
+
 
 
 extension OpenAIRealtimeAPI: RTCDataChannelDelegate {
