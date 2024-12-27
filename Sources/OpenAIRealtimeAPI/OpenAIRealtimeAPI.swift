@@ -15,6 +15,7 @@ public class OpenAIRealtimeAPI {
     public init(modelId: String, apiKey: String) {
         self.modelId = modelId
         self.apiKey = apiKey
+        super.init() // Required because we inherit from NSObject
         setupAudioSession()
     }
 
@@ -132,29 +133,40 @@ public class OpenAIRealtimeAPI {
 }
 
 extension OpenAIRealtimeAPI: RTCPeerConnectionDelegate {
-    public func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {}
-
-    public func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
-        if let audioTrack = stream.audioTracks.first {
-            print("Received remote audio track")
-        }
+    public func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {
+        print("Peer connection signaling state changed: \(stateChanged)")
     }
 
-    public func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {}
+    public func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
+        print("Peer connection did add stream")
+    }
 
-    public func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {}
+    public func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
+        print("Peer connection did remove stream")
+    }
 
-    public func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {}
+    public func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
+        print("Peer connection should negotiate")
+    }
 
-    public func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {}
+    public func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
+        print("Peer connection ICE connection state changed: \(newState)")
+    }
 
-    public func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {}
+    public func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
+        print("Peer connection did generate candidate: \(candidate.sdp)")
+    }
+
+    public func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
+        print("Peer connection did remove candidates")
+    }
 
     public func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
         self.dataChannel = dataChannel
-        print("Data channel opened")
+        print("Peer connection did open data channel")
     }
 }
+
 
 extension OpenAIRealtimeAPI: RTCDataChannelDelegate {
     /// Updates the data channel delegate
