@@ -157,7 +157,14 @@ extension OpenAIRealtimeAPI: RTCPeerConnectionDelegate {
 }
 
 extension OpenAIRealtimeAPI: RTCDataChannelDelegate {
-    public func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {}
+    /// Updates the data channel delegate
+    public func setDataChannelDelegate(_ delegate: RTCDataChannelDelegate) {
+        self.dataChannel?.delegate = delegate
+    }
+
+    public func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {
+        print("Data channel state changed: \(dataChannel.readyState.rawValue)")
+    }
 
     public func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
         if let message = String(data: buffer.data, encoding: .utf8) {
@@ -165,3 +172,4 @@ extension OpenAIRealtimeAPI: RTCDataChannelDelegate {
         }
     }
 }
+
